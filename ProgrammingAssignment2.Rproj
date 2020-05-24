@@ -1,0 +1,39 @@
+## The function uses the assignment '<<-' to get elements from different
+## environments. The stinverse and ldinverse list variables are there
+## to assist the proccess 
+
+makeCacheMatrix <- function(x = matrix()) {
+  itimes <- NULL
+##This element itimes will be fruther useful to calculate a function and
+##the inverse
+  placec <- function(y){
+  x <<- y
+##Y and X aren't in the same environment
+  itimes <<- NULL
+  }
+  loadc <- function()x
+##in this new environment is where the function and the inverse function 
+##are stored in lists
+  stiverse <- function(inverse) itimes <<- inverse
+  ldinverse <- function() itimes
+  list(placec = placec, loadc = loadc, 
+  stiverse = stiverse, 
+  ldinverse = ldinverse)
+}
+
+##This will help load the function in a matrix called matx
+
+cacheSolve <- function(x, ...) {
+## Return a matrix that is the inverse of 'x'
+  itimes <- x$ldinverse()
+  if(!is.null(itimes)){
+  message("Loading data")
+  return(itimes)
+##This loop uses the itimes variable of the beginning to store the
+##inverse function
+  }
+  matx <- x$loadc()
+  itimes <- solve(matx,...)
+  x$stiverse(itimes)
+  itimes
+}
